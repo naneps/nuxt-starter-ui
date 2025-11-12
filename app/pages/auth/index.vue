@@ -70,7 +70,7 @@ async function onSubmit() {
   <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
     <!-- Left: Login form -->
     <div class="flex items-center justify-center p-6 lg:p-10 bg-background">
-      <UCard class="w-full max-w-md shadow-lg">
+      <UCard class="w-full max-w-md">
         <template #header>
           <div class="flex items-center gap-3">
             <div
@@ -90,7 +90,7 @@ async function onSubmit() {
           :schema="schema"
           :state="state"
           @submit="onSubmit"
-          class="space-y-6">
+          class="space-y-3">
           <UFormField label="Email" name="email" >
             <UInput
               v-model="state.email"
