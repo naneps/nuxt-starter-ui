@@ -8,8 +8,13 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/scripts',
     '@nuxt/image',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
   ],
+  pinia: {
+     storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },
   css: [
     'assets/css/main.css'
   ]

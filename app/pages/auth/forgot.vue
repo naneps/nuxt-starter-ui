@@ -1,8 +1,11 @@
-<template >
+<template>
     <div>
-        <NuxtPage/>
+            Forgot
     </div>
-
 </template>
 <script setup lang="ts">
+
 </script>
+<style >
+    
+</style>

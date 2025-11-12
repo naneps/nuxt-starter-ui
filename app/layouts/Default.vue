@@ -21,79 +21,82 @@ const open = ref(false);
 const links = [
   [
     {
-      label: "Home",
+      label: "Dashboard",
       icon: "i-lucide-house",
       to: "/",
-      onSelect: () => {
-        open.value = false;
-      },
+      onSelect: () => { open.value = false }
     },
     {
-      label: "Inbox",
-      icon: "i-lucide-inbox",
-      to: "/inbox",
-      badge: "4",
-      onSelect: () => {
-        open.value = false;
-      },
-    },
-    {
-      label: "Customers",
-      icon: "i-lucide-users",
-      to: "/customers",
-      onSelect: () => {
-        open.value = false;
-      },
-    },
-    {
-      label: "Settings",
-      to: "/settings",
-      icon: "i-lucide-settings",
-      defaultOpen: true,
+      label: "Master Data",
+      icon: "i-lucide-database",
+      to: "/master-data",
       type: "trigger",
+      defaultOpen: true,
       children: [
-        {
-          label: "General",
-          to: "/settings",
-          exact: true,
-          onSelect: () => {
-            open.value = false;
-          },
-        },
-        {
-          label: "Members",
-          to: "/settings/members",
-          onSelect: () => {
-            open.value = false;
-          },
-        },
-        {
-          label: "Notifications",
-          to: "/settings/notifications",
-          onSelect: () => {
-            open.value = false;
-          },
-        },
-        {
-          label: "Security",
-          to: "/settings/security",
-          onSelect: () => {
-            open.value = false;
-          },
-        },
+        { label: "Items",           icon: "i-lucide-package",      to: "/master-data/items",           onSelect: () => { open.value = false } },
+        { label: "Item Variants",   icon: "i-lucide-layers",       to: "/master-data/item-variants",   onSelect: () => { open.value = false } },
+        { label: "Units",           icon: "i-lucide-ruler",        to: "/master-data/units",           onSelect: () => { open.value = false } },
+        { label: "Categories",      icon: "i-lucide-folder-tree",  to: "/master-data/categories",      onSelect: () => { open.value = false } },
+        { label: "Warehouses",      icon: "i-lucide-building-2",   to: "/master-data/warehouses",      onSelect: () => { open.value = false } },
+        { label: "Suppliers",       icon: "i-lucide-handshake",    to: "/master-data/suppliers",       onSelect: () => { open.value = false } },
+        { label: "Customers",       icon: "i-lucide-users",        to: "/master-data/customers",       onSelect: () => { open.value = false } },
+        { label: "Price Lists",     icon: "i-lucide-badge-percent",to: "/master-data/price-lists",     onSelect: () => { open.value = false } },
+        { label: "Payment Terms",   icon: "i-lucide-credit-card",  to: "/master-data/payment-terms",   onSelect: () => { open.value = false } },
       ],
+    },
+    {
+      label: "Taksasi (Ekspektasi)",
+      icon: "i-lucide-trending-up",
+      to: "/taksasi",
+      onSelect: () => { open.value = false }
+    },
+    {
+      label: "Planning Purchasing",
+      icon: "i-lucide-clipboard-list",
+      to: "/planning-purchasing",
+      onSelect: () => { open.value = false }
+    },
+    {
+      label: "Purchasing & Stok (Realisasi)",
+      icon: "i-lucide-boxes",
+      to: "/purchasing-stock",
+      onSelect: () => { open.value = false }
+    },
+    {
+      label: "Sales",
+      icon: "i-lucide-bar-chart-3",
+      to: "/sales",
+      onSelect: () => { open.value = false }
+    },
+    {
+      label: "Reporting",
+      icon: "i-lucide-pie-chart",
+      to: "/reporting",
+      onSelect: () => { open.value = false }
+    },
+    {
+      label: "Report Visit",
+      icon: "i-lucide-map-pin",
+      to: "/report-visit",
+      onSelect: () => { open.value = false }
+    },
+    {
+      label: "Distribusi",
+      icon: "i-lucide-truck",
+      to: "/distribusi",
+      onSelect: () => { open.value = false }
     },
   ],
   [
     {
-      label: "Feedback",
-      icon: "i-lucide-message-circle",
-      to: "https://github.com/nuxt-ui-templates/dashboard",
-      target: "_blank",
+      label: "Docs",
+      icon: "i-lucide-book-open",
+      to: "/docs",
+      onSelect: () => { open.value = false }
     },
     {
       label: "Help & Support",
-      icon: "i-lucide-info",
+      icon: "i-lucide-life-buoy",
       to: "https://github.com/nuxt-ui-templates/dashboard",
       target: "_blank",
     },
