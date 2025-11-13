@@ -2,7 +2,20 @@
 import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt(
-  rules: {
-    'nuxt/no-cjs-imports': 'off'
-  }
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
+    files: ['**/*.vue', '**/*.ts', '**/*.js'],
+    languageOptions: {
+      globals: {
+        defineProps: 'readonly',
+        defineEmits: 'readonly',
+        defineExpose: 'readonly',
+        withDefaults: 'readonly',
+      },
+    },
+  },
 )

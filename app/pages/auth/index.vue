@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { z } from "zod";
+import { z } from "zod"
 
-definePageMeta({layout: ""});
-useHead({title: "Masuk"});
+definePageMeta({ layout: 'auth', })
+useHead({ title: "Masuk" })
 
 const schema = z.object({
-  email: z.string().email("Email tidak valid"),
+  email: z.string().min(1, "Wajib diisi").email("Email tidak valid").or(z.string().min(1, "Wajib diisi")),
   password: z.string().min(6, "Minimal 6 karakter"),
   remember: z.boolean().optional(),
-});
-type FormState = z.infer<typeof schema>;
+})
+type FormState = z.infer<typeof schema>
 
-const state = reactive<FormState>({email: "", password: "", remember: true});
-const showPass = ref(false);
-const loading = ref(false);
-const toast = useToast();
-const router = useRouter();
+const state = reactive<FormState>({ email: "", password: "", remember: true })
+const showPass = ref(false)
+const loading = ref(false)
+const toast = useToast()
+const router = useRouter()
+const auth = useAuthStore()
 
 // --- Slider ---
 const slides = [
@@ -34,34 +35,31 @@ const slides = [
     title: "Data tetap privat",
     desc: "Keamanan berlapis dengan enkripsi modern untuk setiap akun.",
   },
-];
-const active = ref(0);
-let timer: ReturnType<typeof setInterval> | null = null;
+]
+const active = ref(0)
+let timer: ReturnType<typeof setInterval> | null = null
 
 onMounted(() => {
   timer = setInterval(() => {
-    active.value = (active.value + 1) % slides.length;
-  }, 4500);
-});
-onBeforeUnmount(() => {
-  if (timer) clearInterval(timer);
-});
+    active.value = (active.value + 1) % slides.length
+  }, 4500)
+})
+onBeforeUnmount(() => { if (timer) clearInterval(timer) })
 
 async function onSubmit() {
-  loading.value = true;
+  loading.value = true
   try {
-    // TODO: ganti dengan call API login asli
-    await new Promise((r) => setTimeout(r, 900));
-    toast.add({title: "Berhasil masuk", color: "green"});
-    router.push("/dashboard");
-  } catch (e) {
+    await auth.login(state.email, state.password)
+    toast.add({ title: "Berhasil masuk", color: "success" })
+    navigateTo("/")
+  } catch (e: any) {
     toast.add({
       title: "Gagal login",
-      description: "Periksa kredensial Anda.",
-      color: "red",
-    });
+      description: auth.error || "Periksa kredensial Anda.",
+      color: "error",
+    })
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 </script>
@@ -73,11 +71,8 @@ async function onSubmit() {
       <UCard class="w-full max-w-md">
         <template #header>
           <div class="flex items-center gap-3">
-            <div
-              class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <UIcon
-                name="i-heroicons-lock-closed"
-                class="size-5 text-primary" />
+            <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <UIcon name="i-heroicons-lock-closed" class="size-5 text-primary" />
             </div>
             <div>
               <h1 class="text-xl font-semibold">Selamat datang kembali</h1>
@@ -86,83 +81,61 @@ async function onSubmit() {
           </div>
         </template>
 
-        <UForm
-          :schema="schema"
-          :state="state"
-          @submit="onSubmit"
-          class="space-y-3">
-          <UFormField label="Email" name="email" >
+        <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-5">
+          <!-- Username / Email -->
+          <UFormField label="Email atau Username" name="email">
             <UInput
               v-model="state.email"
-              type="email"
-              placeholder="kamu@email.com"
+              type="text"
+              :disabled="loading"
+              autocomplete="username"
+              placeholder="cashier atau kamu@email.com"
               icon="i-heroicons-envelope"
               size="lg"
-              class="w-full min-w-0" />
+              class="w-full min-w-0"
+            />
           </UFormField>
 
-          <UFormField label="Kata sandi" name="password" >
+          <!-- Password -->
+          <UFormField label="Kata sandi" name="password">
             <UInput
               v-model="state.password"
               :type="showPass ? 'text' : 'password'"
+              :disabled="loading"
+              autocomplete="current-password"
               placeholder="••••••••"
               size="lg"
-              class="w-full min-w-0">
+              class="w-full min-w-0"
+            >
               <template #leading>
                 <UIcon name="i-heroicons-key" />
               </template>
-
-              <!-- tombol mata tanpa border/padding berlebih -->
               <template #trailing>
                 <button
                   type="button"
                   class="px-2 opacity-70 hover:opacity-100"
                   @click="showPass = !showPass"
-                  :aria-label="
-                    showPass ? 'Sembunyikan sandi' : 'Tampilkan sandi'
-                  ">
-                  <UIcon
-                    :name="
-                      showPass ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'
-                    "
-                    class="size-5" />
+                  :aria-label="showPass ? 'Sembunyikan sandi' : 'Tampilkan sandi'"
+                >
+                  <UIcon :name="showPass ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" class="size-5" />
                 </button>
               </template>
             </UInput>
           </UFormField>
 
           <div class="flex items-center justify-between">
-            <UCheckbox v-model="state.remember" label="Tetap masuk" />
-            <NuxtLink to="/auth/forgot" class="text-sm text-primary hover:underline"
-              >Lupa sandi?</NuxtLink
-            >
+            <UCheckbox v-model="state.remember" label="Tetap masuk" :disabled="loading" />
+            <NuxtLink to="/auth/forgot" class="text-sm text-primary hover:underline">Lupa sandi?</NuxtLink>
           </div>
 
-          <UButton type="submit" :loading="loading" size="lg" block
-            >Masuk</UButton
-          >
+          <UButton type="submit" :loading="loading || auth.pending" size="lg" block>Masuk</UButton>
 
 
           <div class="grid grid-cols-2 gap-3">
-            <UButton variant="outline" block icon="i-simple-icons-google"
-              >Google</UButton
-            >
-            <UButton variant="outline" block icon="i-simple-icons-github"
-              >GitHub</UButton
-            >
+            <UButton variant="outline" block icon="i-simple-icons-google" :disabled="loading || auth.pending">Google</UButton>
+            <UButton variant="outline" block icon="i-simple-icons-github" :disabled="loading || auth.pending">GitHub</UButton>
           </div>
         </UForm>
-
-        <!-- <template #footer>
-          <p class="text-sm text-muted">
-            Belum punya akun?
-            <NuxtLink
-              to="/auth/register"
-              class="font-medium text-primary hover:underline"
-              >Daftar</NuxtLink
-            >
-          </p>
-        </template> -->
       </UCard>
     </div>
 
@@ -179,18 +152,20 @@ async function onSubmit() {
             class="absolute inset-0 size-full object-cover"
             :alt="s.title"
             decoding="async"
-            loading="eager" />
+            loading="eager"
+          />
         </TransitionGroup>
       </div>
 
       <!-- Overlay gradient -->
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/10" />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/10" />
 
       <!-- Caption + Dots -->
       <div class="absolute bottom-0 inset-x-0 p-8 xl:p-12 text-white">
-        <h2 class="text-2xl font-semibold">{{ slides[active].title }}</h2>
-        <p class="mt-2 max-w-xl text-white/80">{{ slides[active].desc }}</p>
+        <h2 class="text-2xl font-semibold">{{ slides[active]?.title ?? "" }}</h2>
+        <p class="mt-2 max-w-xl text-white/80">
+          {{ slides[active]?.desc ?? "" }}
+        </p>
 
         <div class="mt-6 flex gap-2">
           <button
@@ -198,7 +173,8 @@ async function onSubmit() {
             :key="i"
             class="h-1.5 flex-1 rounded-full transition"
             :class="i === active ? 'bg-white' : 'bg-white/40 hover:bg-white/60'"
-            @click="active = i" />
+            @click="active = i"
+          />
         </div>
       </div>
     </div>
@@ -207,11 +183,7 @@ async function onSubmit() {
 
 <style scoped>
 .fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.6s ease;
-}
+.fade-leave-active { transition: opacity .6s ease; }
 .fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+.fade-leave-to { opacity: 0; }
 </style>

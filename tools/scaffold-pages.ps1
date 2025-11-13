@@ -7,7 +7,7 @@ function New-Page($path, $title) {
   if (Test-Path $file) { Write-Host "skip $file (exists)"; return }
 @"
 <script setup lang="ts">
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({  })
 </script>
 
 <template>
@@ -25,7 +25,7 @@ New-Item -ItemType Directory -Force -Path "pages" | Out-Null
 if (-not (Test-Path "pages/index.vue")) {
 @"
 <script setup lang="ts">
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({  })
 </script>
 <template>
   <UCard><template #header>Dashboard</template>Welcome.</UCard>

@@ -89,12 +89,6 @@ const links = [
   ],
   [
     {
-      label: "Docs",
-      icon: "i-lucide-book-open",
-      to: "/docs",
-      onSelect: () => { open.value = false }
-    },
-    {
       label: "Help & Support",
       icon: "i-lucide-life-buoy",
       to: "https://github.com/nuxt-ui-templates/dashboard",
@@ -233,6 +227,6 @@ onMounted(async () => {
       </template>
     </UDashboardPanel>
 
-    <NotificationsSlideover />
+    <!-- <NotificationsSlideover /> -->
   </UDashboardGroup>
 </template>
