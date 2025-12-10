@@ -5,6 +5,8 @@ export default withNuxt(
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "no-use-before-define": "off",
+       "@typescript-eslint/no-empty-object-type": "off",
     },
   },
   {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
+import AppBreadCrumb from "~/components/ui/AppBreadCrumb.vue";
 
 const { isNotificationsSlideoverOpen } = useDashboard()
 
@@ -33,6 +34,8 @@ const links = [
       type: "trigger",
       defaultOpen: true,
       children: [
+        //user
+        { label: "Users",           icon: "i-lucide-users",        to: "/master-data/users",           onSelect: () => { open.value = false } },
         { label: "Items",           icon: "i-lucide-package",      to: "/master-data/items",           onSelect: () => { open.value = false } },
         { label: "Item Variants",   icon: "i-lucide-layers",       to: "/master-data/item-variants",   onSelect: () => { open.value = false } },
         { label: "Units",           icon: "i-lucide-ruler",        to: "/master-data/units",           onSelect: () => { open.value = false } },
@@ -191,7 +194,7 @@ onMounted(async () => {
     <UDashboardSearch :groups="groups" />
     <UDashboardPanel id="home">
       <template #header>
-        <UDashboardNavbar title="Home" :ui="{right: 'gap-3'}">
+        <UDashboardNavbar :ui="{right: 'gap-3'}">
           <template #leading>
             <UDashboardSidebarCollapse />
           </template>
@@ -215,11 +218,12 @@ onMounted(async () => {
           </template>
         </UDashboardNavbar>
 
-        <!-- <UDashboardToolbar>
+        <UDashboardToolbar>
           <template #left>
+            <AppBreadCrumb class="" :hide-root="false" />
           
           </template>
-        </UDashboardToolbar> -->
+        </UDashboardToolbar>
       </template>
 
       <template #body>
